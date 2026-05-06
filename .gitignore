@@ -2,4 +2,4 @@
 bin/
 dist/
 .figma-fetch/
-figma-fetch
+/figma-fetch
