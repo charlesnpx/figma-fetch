@@ -1,0 +1,5 @@
+.DS_Store
+bin/
+dist/
+.figma-fetch/
+figma-fetch

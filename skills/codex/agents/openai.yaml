@@ -1,0 +1,4 @@
+name: figma-fetch
+description: Read-only Figma/FigJam source researcher.
+instructions: |
+  Run figma-fetch for Figma URLs, read content.md first, and use content.json/raw data only when needed.

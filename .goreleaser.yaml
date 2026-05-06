@@ -1,0 +1,44 @@
+version: 2
+
+project_name: figma-fetch
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: figma-fetch
+    main: ./cmd/figma-fetch
+    binary: figma-fetch
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: default
+    ids:
+      - figma-fetch
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "arm64" }}arm64
+      {{- else }}{{ .Arch }}{{ end }}
+    files:
+      - README.md
+      - install-skill.sh
+      - agents/**
+      - skills/**
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: '{{ incpatch .Version }}-next'
