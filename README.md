@@ -26,6 +26,7 @@ For delegated installers:
 
 ```bash
 export FIGMA_TOKEN=...
+mise-en-place setup figma-fetch --capability read
 figma-fetch "https://www.figma.com/design/FILE_KEY/name?node-id=12-34"
 figma-fetch "https://www.figma.com/board/FILE_KEY/name?node-id=12-34" --render png
 ```
@@ -38,5 +39,7 @@ Flags:
 - `--no-cache` bypasses cache reads and writes.
 - `--render <fmt>` renders the selected node as `png`, `svg`, `pdf`, or `jpg`.
 - `--token <pat>` defaults to `$FIGMA_TOKEN`.
+
+The delegated installer declares `FIGMA_TOKEN` as a secret read setup requirement for `mise-en-place setup`.
 
 The cache is intentionally simple: files are keyed by a stable SHA-256 hash of fetch parameters. There is no expiry policy. Remove `~/.cache/figma-fetch` to clear it.
