@@ -7,6 +7,12 @@ description: "Read-only Figma/FigJam retrieval from Figma URLs."
 
 Use `figma-fetch` when the user needs source context from a Figma or FigJam URL.
 
+When available, check setup first:
+
+```bash
+mise-en-place setup figma-fetch --capability read
+```
+
 ```bash
 figma-fetch "https://www.figma.com/design/FILE_KEY/name?node-id=12-34"
 ```

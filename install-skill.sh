@@ -100,7 +100,7 @@ print_file() {
 }
 
 first_target=true
-printf '{"schema":1,"name":"%s","version":"%s","operation":"%s","kind":"delegated","targets":{' "$NAME" "$VERSION" "$OPERATION"
+printf '{"schema":1,"name":"%s","version":"%s","operation":"%s","kind":"delegated","capabilities":["read"],"setup":[{"kind":"env","env":"FIGMA_TOKEN","value_class":"secret","required_for":["read"],"remediation":"Export FIGMA_TOKEN with a Figma personal access token."}],"targets":{' "$NAME" "$VERSION" "$OPERATION"
 
 emit_single() {
   local target_name="$1"

@@ -7,6 +7,12 @@ description: "Use this skill for read-only Figma/FigJam source research from Fig
 
 Run `figma-fetch <url>` for read-only Figma or FigJam retrieval. Prefer `content.md` for normal context, then `content.json` or `raw/nodes.json` when the task needs more structure.
 
+When available, check setup first:
+
+```bash
+mise-en-place setup figma-fetch --capability read
+```
+
 Useful forms:
 
 ```bash
