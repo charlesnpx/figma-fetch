@@ -30,14 +30,14 @@ func fetchAndWrite(opts fetchOptions) error {
 	if opts.nodeID != "" {
 		ref.NodeID = strings.ReplaceAll(opts.nodeID, "-", ":")
 	}
-	if opts.outDir == "" {
-		opts.outDir = defaultOutDir(ref)
-	}
 	if opts.cacheDir == "" {
 		opts.cacheDir, err = defaultCacheDir("figma-fetch")
 		if err != nil {
 			return err
 		}
+	}
+	if opts.outDir == "" {
+		opts.outDir = defaultOutDir(opts.cacheDir, ref)
 	}
 	if opts.token == "" {
 		opts.token = os.Getenv("FIGMA_TOKEN")
@@ -118,12 +118,12 @@ func cacheKey(values map[string]string) string {
 	return hex.EncodeToString(sum[:])[:16]
 }
 
-func defaultOutDir(ref figmaRef) string {
+func defaultOutDir(cacheDir string, ref figmaRef) string {
 	node := "root"
 	if ref.NodeID != "" {
 		node = safeID(ref.NodeID)
 	}
-	return filepath.Join(".figma-fetch", ref.FileKey, node)
+	return filepath.Join(cacheDir, "outputs", safeID(ref.FileKey), node)
 }
 
 func defaultCacheDir(name string) (string, error) {
