@@ -34,11 +34,13 @@ figma-fetch "https://www.figma.com/board/FILE_KEY/name?node-id=12-34" --render p
 Flags:
 
 - `--node <id>` overrides the URL node id.
-- `--out <dir>` defaults to `./.figma-fetch/<file_key>/<node_or_root>`.
+- `--out <dir>` defaults to `~/.cache/figma-fetch/outputs/<file_key>/<node_or_root>`.
 - `--cache-dir <dir>` defaults to `~/.cache/figma-fetch`.
 - `--no-cache` bypasses cache reads and writes.
 - `--render <fmt>` renders the selected node as `png`, `svg`, `pdf`, or `jpg`.
 - `--token <pat>` defaults to `$FIGMA_TOKEN`.
+
+Pass an explicit relative `--out` if you want output materialized in the caller's directory.
 
 The delegated installer declares `FIGMA_TOKEN` as a secret read setup requirement for `mise-en-place setup`.
 

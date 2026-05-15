@@ -20,4 +20,4 @@ figma-fetch "https://www.figma.com/design/FILE_KEY/name?node-id=12-34"
 figma-fetch "https://www.figma.com/board/FILE_KEY/name?node-id=12-34" --render png
 ```
 
-The CLI writes a simple output directory with `content.md`, `content.json`, `raw/nodes.json`, and optional rendered assets. It does not publish context handles or schema manifests.
+The CLI writes a simple output directory with `content.md`, `content.json`, `raw/nodes.json`, and optional rendered assets. The output directory defaults to `~/.cache/figma-fetch/outputs/...`; pass `--out <dir>` only when caller-local files are required. It does not publish context handles or schema manifests.

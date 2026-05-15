@@ -56,6 +56,64 @@ func TestFetchWritesOutputAndUsesCache(t *testing.T) {
 	}
 }
 
+func TestFetchDefaultsOutputUnderCache(t *testing.T) {
+	tmp := t.TempDir()
+	cwd := filepath.Join(tmp, "cwd")
+	if err := os.Mkdir(cwd, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	t.Chdir(cwd)
+
+	imageServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte("png"))
+	}))
+	defer imageServer.Close()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/files/file123/nodes":
+			if r.URL.Query().Get("ids") != "1:2" {
+				t.Fatalf("unexpected nodes query: %s", r.URL.RawQuery)
+			}
+			_ = json.NewEncoder(w).Encode(map[string]any{"nodes": map[string]any{"1:2": map[string]any{"document": map[string]any{
+				"id": "1:2", "name": "Frame", "type": "FRAME",
+			}}}})
+		case "/images/file123":
+			_ = json.NewEncoder(w).Encode(map[string]any{"images": map[string]string{"1:2": imageServer.URL + "/image.png"}})
+		default:
+			t.Fatalf("unexpected request: %s?%s", r.URL.Path, r.URL.RawQuery)
+		}
+	}))
+	defer server.Close()
+	t.Setenv("FIGMA_API_BASE", server.URL)
+
+	opts := fetchOptions{
+		url:      "https://www.figma.com/design/file123/Name?node-id=1-2",
+		cacheDir: filepath.Join(tmp, "cache"),
+		render:   "png",
+		token:    "token",
+	}
+	if err := fetchAndWrite(opts); err != nil {
+		t.Fatal(err)
+	}
+	ref, err := parseFigmaURL(opts.url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	outDir := defaultOutDir(opts.cacheDir, ref)
+	for _, path := range []string{
+		filepath.Join(outDir, "content.md"),
+		filepath.Join(outDir, "assets", "1-2.png"),
+	} {
+		if _, err := os.Stat(path); err != nil {
+			t.Fatalf("expected cache-backed output %s: %v", path, err)
+		}
+	}
+	if _, err := os.Stat(filepath.Join(cwd, ".figma-fetch")); !os.IsNotExist(err) {
+		t.Fatalf("default output created cwd .figma-fetch: %v", err)
+	}
+}
+
 func TestRenderWritesAsset(t *testing.T) {
 	tmp := t.TempDir()
 	var imageURL string
